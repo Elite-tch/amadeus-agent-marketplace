@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+}
+
+:root {
+  --brand-primary: #00ff9d;
+  /* Electric Green */
+  --brand-secondary: #7000ff;
+  /* Cyber Purple */
+  --bg-dark: #050505;
+  --bg-card: #0a0a0a;
+  --border-color: #1a1a1a;
+}
+
+@utility container-custom {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+@utility glass-panel {
+  @apply bg-[#0a0a0a]/80 backdrop-blur-md border border-[#333] shadow-none;
+}
+
+@utility btn-primary {
+  @apply px-6 py-2 bg-[#00ff9d] text-black font-mono font-bold uppercase tracking-wider hover:bg-[#00cc7d] transition-all active:translate-y-0.5 cursor-pointer;
+}
+
+@utility btn-secondary {
+  @apply px-6 py-2 bg-transparent text-[#00ff9d] border border-[#00ff9d] font-mono font-bold uppercase tracking-wider hover:bg-[#00ff9d]/10 transition-all active:translate-y-0.5 cursor-pointer;
+}
+
+@utility text-glow {
+  text-shadow: 0 0 10px rgba(0, 255, 157, 0.5);
+}
+
+body {
+  @apply bg-[#050505] text-slate-300 font-sans selection:bg-[#00ff9d] selection:text-black;
+  background-image:
+    linear-gradient(rgba(26, 26, 26, 0.5) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 26, 26, 0.5) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
