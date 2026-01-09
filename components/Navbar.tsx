@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, X, Wallet, Terminal, Cpu } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import ConnectWallet from "@/components/ConnectWallet";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
@@ -33,14 +34,11 @@ export default function Navbar() {
 
                     {/* Actions */}
                     <div className="hidden md:flex items-center gap-4">
-                        <div className="flex items-center gap-2 px-3 py-1.5 border border-[#333] bg-black/50 text-xs font-mono text-[#00ff9d]">
+                        <div className="flex items-center gap-2 px-3 py-2.5 border border-[#333] bg-black/50 text-xs font-mono text-[#00ff9d]">
                             <span className="w-2 h-2 bg-[#00ff9d] rounded-full animate-pulse" />
                             SYSTEM ONLINE
                         </div>
-                        <button className="btn-primary flex items-center gap-2 clip-path-button">
-                            <Wallet size={18} />
-                            <span>Connect</span>
-                        </button>
+                        <ConnectWallet />
                     </div>
 
                     {/* Mobile Toggle */}
@@ -75,10 +73,7 @@ export default function Navbar() {
                                 [Docs]
                             </MobileNavLink>
                             <div className="pt-4 border-t border-[#333]">
-                                <button className="w-full btn-primary flex justify-center items-center gap-2">
-                                    <Wallet size={18} />
-                                    <span>Connect Wallet</span>
-                                </button>
+                                <ConnectWallet />
                             </div>
                         </div>
                     </motion.div>

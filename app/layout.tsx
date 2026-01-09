@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
+import { WalletProvider } from "@/contexts/WalletContext";
+import Navbar from "@/components/Navbar";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -22,7 +24,10 @@ export default function RootLayout({
       <body
         className={`${outfit.variable} font-sans antialiased bg-slate-50 text-slate-900`}
       >
-        {children}
+        <WalletProvider>
+          <Navbar />
+          {children}
+        </WalletProvider>
       </body>
     </html>
   );

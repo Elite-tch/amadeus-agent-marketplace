@@ -1,13 +1,11 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import { Book, Code, Terminal, ChevronRight, FileText, Folder } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function DocsPage() {
     return (
         <main className="min-h-screen bg-[#050505] selection:bg-[#00ff9d] selection:text-black font-mono">
-            <Navbar />
 
             {/* Grid Overlay */}
             <div className="fixed inset-0 pointer-events-none z-0 opacity-10"

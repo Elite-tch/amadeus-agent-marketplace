@@ -24,11 +24,11 @@
 }
 
 @utility btn-primary {
-  @apply px-6 py-2 bg-[#00ff9d] text-black font-mono font-bold uppercase tracking-wider hover:bg-[#00cc7d] transition-all active:translate-y-0.5 cursor-pointer;
+  @apply px-6 py-1.5 bg-[#00ff9d] text-black font-mono font-bold uppercase tracking-wider hover:bg-[#00cc7d] transition-all active:translate-y-0.5 cursor-pointer;
 }
 
 @utility btn-secondary {
-  @apply px-6 py-2 bg-transparent text-[#00ff9d] border border-[#00ff9d] font-mono font-bold uppercase tracking-wider hover:bg-[#00ff9d]/10 transition-all active:translate-y-0.5 cursor-pointer;
+  @apply px-6 py-1.5 bg-transparent text-[#00ff9d] border border-[#00ff9d] font-mono font-bold uppercase tracking-wider hover:bg-[#00ff9d]/10 transition-all active:translate-y-0.5 cursor-pointer;
 }
 
 @utility text-glow {

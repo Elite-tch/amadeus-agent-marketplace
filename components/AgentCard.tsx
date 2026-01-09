@@ -1,8 +1,45 @@
-import { Agent } from "@/lib/mock-data";
 import { Star, ShieldCheck, Download, Terminal } from "lucide-react";
 import Link from "next/link";
 
+// Agent type matching API response
+export interface Agent {
+    _id: string;
+    name: string;
+    description: string;
+    category: string;
+    tags: string[];
+    mcpConfig: {
+        serverUrl: string;
+        protocol: string;
+    };
+    pricing: {
+        model: 'free' | 'paid';
+        amount: number;
+        currency: string;
+    };
+    owner: string;
+    logoUrl?: string;
+    demoVideoUrl?: string;
+    screenshotUrls?: string[];
+    documentationUrl?: string;
+    githubUrl?: string;
+    websiteUrl?: string;
+    isVerified: boolean;
+    isActive: boolean;
+    stats: {
+        totalPurchases: number;
+        activeSubscribers: number;
+        averageRating: number;
+        totalReviews: number;
+    };
+    createdAt: string;
+    updatedAt: string;
+}
+
 export default function AgentCard({ agent }: { agent: Agent }) {
+    // Convert atomic units to AMA (divide by 1 billion)
+    const displayPrice = agent.pricing.amount / 1000000000;
+
     return (
         <div className="group relative bg-[#0a0a0a] border border-[#333] hover:border-[#00ff9d] transition-all duration-300 flex flex-col h-full overflow-hidden hover:shadow-[0_0_20px_rgba(0,255,157,0.1)]">
             {/* Header / Banner */}
@@ -20,11 +57,19 @@ export default function AgentCard({ agent }: { agent: Agent }) {
                 {/* Icon & Meta */}
                 <div className="flex justify-between items-start -mt-12 mb-4">
                     <div className="w-16 h-16 bg-[#000] border border-[#333] group-hover:border-[#00ff9d] transition-colors p-1 shadow-lg relative z-20 overflow-hidden">
-                        <img
-                            src={`https://robohash.org/${agent.name.replace(/\s+/g, '')}.png?set=set1&bgset=bg1&size=200x200`}
-                            alt={agent.name}
-                            className="w-full h-full object-cover bg-slate-900"
-                        />
+                        {agent.logoUrl ? (
+                            <img
+                                src={agent.logoUrl}
+                                alt={agent.name}
+                                className="w-full h-full object-cover bg-slate-900"
+                            />
+                        ) : (
+                            <img
+                                src={`https://robohash.org/${agent.name.replace(/\s+/g, '')}.png?set=set1&bgset=bg1&size=200x200`}
+                                alt={agent.name}
+                                className="w-full h-full object-cover bg-slate-900"
+                            />
+                        )}
                     </div>
                     <div className="bg-[#1a1a1a] border border-[#333] px-2 py-1 text-[10px] font-mono font-bold uppercase text-[#00ff9d] tracking-wider relative z-20">
                         {agent.category}
@@ -35,7 +80,7 @@ export default function AgentCard({ agent }: { agent: Agent }) {
                 <div className="mb-4">
                     <div className="flex items-center gap-1 mb-1">
                         <h3 className="font-bold text-lg text-white line-clamp-1 font-mono">{agent.name}</h3>
-                        {agent.verified && <ShieldCheck size={16} className="text-[#00ff9d]" />}
+                        {agent.isVerified && <ShieldCheck size={16} className="text-[#00ff9d]" />}
                     </div>
                     <p className="text-sm text-slate-400 line-clamp-2 min-h-[40px] font-sans">
                         {agent.description}
@@ -46,11 +91,11 @@ export default function AgentCard({ agent }: { agent: Agent }) {
                 <div className="mt-auto pt-4 border-t border-[#333] flex items-center justify-between font-mono text-xs">
                     <div className="flex items-center gap-1 text-[#00ff9d] font-bold">
                         <Star size={12} fill="currentColor" />
-                        <span>{agent.rating}</span>
-                        <span className="text-slate-500 font-normal">[{agent.reviews}]</span>
+                        <span>{agent.stats.averageRating.toFixed(1)}</span>
+                        <span className="text-slate-500 font-normal">[{agent.stats.totalReviews}]</span>
                     </div>
                     <div className="font-bold text-white">
-                        {agent.price === 0 ? "FREE ACCESS" : `${agent.price} AMA`}
+                        {agent.pricing.model === 'free' ? "FREE" : `${displayPrice} AMA`}
                     </div>
                 </div>
 
