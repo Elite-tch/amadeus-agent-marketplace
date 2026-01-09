@@ -8,7 +8,7 @@ import { useState, useEffect, useRef } from 'react';
 
 export default function ConnectWallet() {
   const { account, connect, disconnect, isConnected, isConnecting, status, isProviderAvailable } = useWallet();
-  const { balance, loading: balanceLoading } = useBalance(account);
+  const { balance, loading: balanceLoading, network } = useBalance(account);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -99,7 +99,7 @@ export default function ConnectWallet() {
           <button
             type="button"
             onClick={() => setShowDropdown(!showDropdown)}
-            className="text-white font-mono text-xs hover:text-[#00ff9d] transition-colors"
+            className="text-white font-mono text-xs hover:text-[#00ff9d] transition-colors cursor-pointer"
           >
             {formatAddress(account)}
           </button>
@@ -125,21 +125,21 @@ export default function ConnectWallet() {
               className="absolute top-full mt-2 right-0 w-64 bg-[#0a0a0a] border border-[#333] z-50 font-mono"
             >
               {/* Chain Info */}
-              <div className="p-4 border-b border-[#333]">
+              <div className="p-4 border-b border-[#333] uppercase">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-slate-500 text-xs uppercase">Network</span>
+                  <span className="text-slate-500 text-xs">Network</span>
                   <span className="text-[#00ff9d] text-xs font-bold">Amadeus</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-500 text-xs uppercase">Type</span>
-                  <span className="text-white text-xs">Mainnet</span>
+                  <span className="text-slate-500 text-xs">Type</span>
+                  <span className="text-white text-xs">{network}</span>
                 </div>
               </div>
 
               {/* Balance */}
-              <div className="p-4">
+              <div className="p-4 uppercase">
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-500 text-xs uppercase">Balance</span>
+                  <span className="text-slate-500 text-xs">Balance</span>
                   {balanceLoading ? (
                     <span className="text-slate-400 text-sm">Loading...</span>
                   ) : balance !== null ? (
@@ -152,7 +152,7 @@ export default function ConnectWallet() {
 
               {/* Full Address */}
               <div className="p-4 border-t border-[#333] bg-[#050505]">
-                <div className="text-slate-500 text-xs uppercase mb-2">Full Address</div>
+                <div className="text-slate-500 text-xs uppercase mb-2"> Address</div>
                 <div className="text-white text-xs break-all font-mono bg-[#0a0a0a] p-2 border border-[#333]">
                   {account}
                 </div>

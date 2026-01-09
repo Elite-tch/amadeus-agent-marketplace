@@ -1,14 +1,27 @@
 import { useState, useEffect } from 'react';
 import { AmadeusSDK } from '@amadeus-protocol/sdk';
 
-const nodeUrl = process.env.DEFAULT_NODE_URL;
+const nodeUrl = process.env.NEXT_PUBLIC_DEFAULT_NODE_URL;
+const testnetNodeUrl = process.env.NEXT_PUBLIC_TESTNET_NODE_URL;
 
 interface BalanceResult {
   balance: number | null;
   loading: boolean;
   error: string | null;
+  network: 'testnet' | 'mainnet' | 'unknown';
   refetch: () => void;
 }
+
+/**
+ * Helper function to determine network
+ * @param url string | undefined
+ * @returns 'testnet' | 'mainnet' | 'unknown'
+ */
+const getNetwork = (url: string | undefined): 'testnet' | 'mainnet' | 'unknown' => {
+  if (!url) return 'unknown';
+  if (url.includes('testnet')) return 'testnet';
+  return 'mainnet';
+};
 
 /**
  * Hook to fetch AMA token balance for a wallet address
@@ -19,6 +32,10 @@ export function useBalance(walletAddress: string | null): BalanceResult {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [refetchTrigger, setRefetchTrigger] = useState(0);
+
+  // Track which URL is actually being used
+  const activeUrl = testnetNodeUrl; // Change this to testnetNodeUrl or nodeUrl when needed
+  const network = getNetwork(activeUrl);
 
   const refetch = () => {
     setRefetchTrigger(prev => prev + 1);
@@ -40,7 +57,7 @@ export function useBalance(walletAddress: string | null): BalanceResult {
 
       try {
         const sdk = new AmadeusSDK({
-          baseUrl: nodeUrl
+          baseUrl: activeUrl
         });
 
         const result = await sdk.wallet.getBalance(walletAddress, 'AMA');
@@ -67,5 +84,5 @@ export function useBalance(walletAddress: string | null): BalanceResult {
     };
   }, [walletAddress, refetchTrigger]);
 
-  return { balance, loading, error, refetch };
+  return { balance, loading, error, network, refetch };
 }

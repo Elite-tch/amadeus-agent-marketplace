@@ -98,8 +98,9 @@ Developers maintain full control over their infrastructure by deploying on our p
    MONGODB_URI=your_mongodb_connection_string
    
    # Amadeus Network
-   DEFAULT_NODE_URL=https://nodes.amadeus.bot/api
-   
+   NEXT_PUBLIC_DEFAULT_NODE_URL=https://nodes.amadeus.bot/api
+   NEXT_PUBLIC_TESTNET_NODE_URL="http://testnet.ama.one/api"
+
    # Vercel Blob Storage (for file uploads)
    BLOB_READ_WRITE_TOKEN=your_blob_token
    ```
@@ -162,7 +163,7 @@ amadeus-agent-marketplace/
 │   └── amadeus.d.ts       # Amadeus wallet provider types
 │
 └── docs/                   # Documentation files
-    └── marketplace-models-research.md
+    └──
 ```
 
 ---
