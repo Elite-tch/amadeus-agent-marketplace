@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Upload, FileCode, ArrowLeft, Check, X, CloudUpload, Server, Image, Video } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Upload, FileCode, ArrowLeft, Check, X, CloudUpload, Server, Image, Video, CheckCircle } from 'lucide-react';
 import { useWallet } from '@/hooks/useWallet';
 import { validateAgentForm, ValidationErrors } from '@/lib/validation';
 
@@ -12,6 +12,7 @@ export default function PublishPage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadingFiles, setUploadingFiles] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -126,9 +127,10 @@ export default function PublishPage() {
         throw new Error(data.error || 'Submission failed');
       }
 
-      alert('Agent registered successfully! It will be reviewed before being listed.');
+      // Show success modal instead of alert
+      setShowSuccessModal(true);
 
-      // Reset form
+      // Reset form (but keep selectedOption so user stays on form view until modal is closed)
       setFormData({
         name: '',
         description: '',
@@ -146,7 +148,7 @@ export default function PublishPage() {
         screenshotUrls: [],
       });
       setCurrentStep(1);
-      setSelectedOption(null);
+      // Don't reset selectedOption here - let the modal close handler do it
 
     } catch (error) {
       console.error('Submission error:', error);
@@ -169,7 +171,7 @@ export default function PublishPage() {
   // If no option selected, show selection screen
   if (!selectedOption) {
     return (
-      <div className="min-h-screen bg-[#050505] pt-24 pb-16">
+      <div className="min-h-screen bg-[#050505] pt-28 pb-16">
         <div className="container-custom">
           {/* Header */}
           <motion.div
@@ -645,6 +647,98 @@ export default function PublishPage() {
           </form>
         </div>
       </div>
+
+      {/* Success Modal */}
+      <AnimatePresence>
+        {showSuccessModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+            onClick={() => {
+              setShowSuccessModal(false);
+              setSelectedOption(null); // Reset to deployment options screen
+            }}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ type: "spring", duration: 0.3 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative bg-[#0a0a0a] border-2 border-[#333] max-w-md w-full overflow-hidden"
+            >
+              {/* Glow effect */}
+              <div className="absolute inset-0 bg-[#00ff9d]/5 pointer-events-none" />
+
+              {/* Close button */}
+              <button
+                onClick={() => {
+                  setShowSuccessModal(false);
+                  setSelectedOption(null); // Reset to deployment options screen
+                }}
+                className="absolute top-4 right-4 text-slate-500 hover:text-white transition-colors z-10"
+              >
+                <X size={20} />
+              </button>
+
+              <div className="p-8 text-center relative">
+                {/* Success Icon */}
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.1, type: "spring", stiffness: 200 }}
+                >
+                  <CheckCircle className="mx-auto h-20 w-20 text-[#00ff9d] mb-4" />
+                </motion.div>
+
+                {/* Success Title */}
+                <h2 className="text-2xl font-bold text-white mb-2 font-mono uppercase">
+                  Agent Registered
+                </h2>
+
+                {/* Success Message */}
+                <p className="text-slate-400 mb-6">
+                  Your agent has been submitted successfully and will be listed on the public registry.
+                </p>
+
+                {/* Info Box */}
+                {/* <div className="mb-6 p-4 bg-[#00ff9d]/10 border border-[#00ff9d]/30 text-left">
+                  <div className="text-xs text-[#00ff9d] uppercase tracking-widest mb-2">
+                    What's Next?
+                  </div>
+                  <ul className="text-slate-300 text-sm space-y-2">
+                    <li className="flex items-start gap-2">
+                      <Check size={16} className="text-[#00ff9d] mt-0.5 shrink-0" />
+                      <span>DAO review process (1-3 days)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check size={16} className="text-[#00ff9d] mt-0.5 shrink-0" />
+                      <span>Notification upon approval</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <Check size={16} className="text-[#00ff9d] mt-0.5 shrink-0" />
+                      <span>Agent listed on marketplace</span>
+                    </li>
+                  </ul>
+                </div> */}
+
+                {/* Action Button */}
+                <button
+                  onClick={() => {
+                    setShowSuccessModal(false);
+                    setSelectedOption(null); // Reset to deployment options screen
+                  }}
+                  className="w-full bg-[#00ff9d] text-black py-3 text-xs font-mono font-bold uppercase tracking-widest hover:bg-[#00cc7d] transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Menu, X, Wallet, Terminal, Cpu } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import ConnectWallet from "@/components/ConnectWallet";
+import { WalletContext } from "@/contexts/WalletContext";
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const wallet = useContext(WalletContext);
 
     return (
         <nav className="fixed w-full py-3 top-0 z-50 border-b border-[#333] bg-[#050505]/95 backdrop-blur-md">
@@ -28,6 +30,7 @@ export default function Navbar() {
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center gap-8 font-mono text-sm uppercase tracking-wide">
                         <NavLink href="/explore">Registry</NavLink>
+                        {wallet?.isConnected && <NavLink href="/my-agents">My Agents</NavLink>}
                         <NavLink href="/publish">Deploy</NavLink>
                         <NavLink href="/docs">Docs</NavLink>
                     </div>
@@ -66,6 +69,11 @@ export default function Navbar() {
                             <MobileNavLink href="/explore" onClick={() => setIsOpen(false)}>
                                 [Registry]
                             </MobileNavLink>
+                            {wallet?.isConnected && (
+                                <MobileNavLink href="/my-agents" onClick={() => setIsOpen(false)}>
+                                    [My Agents]
+                                </MobileNavLink>
+                            )}
                             <MobileNavLink href="/publish" onClick={() => setIsOpen(false)}>
                                 [Deploy]
                             </MobileNavLink>

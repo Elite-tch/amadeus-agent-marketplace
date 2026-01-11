@@ -2,10 +2,15 @@
 
 import AgentCard, { Agent } from "@/components/AgentCard";
 import { Search, SlidersHorizontal, Terminal, Activity } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { motion } from "framer-motion";
+import { WalletContext } from "@/contexts/WalletContext";
+import { useMyAgents } from "@/hooks/useMyAgents";
 
 export default function ExplorePage() {
+  const wallet = useContext(WalletContext);
+  const { ownedAgents, refetch: refetchOwnedAgents } = useMyAgents(wallet?.account || null);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [agents, setAgents] = useState<Agent[]>([]);
@@ -182,7 +187,11 @@ export default function ExplorePage() {
                   key={agent._id}
                   className="h-full"
                 >
-                  <AgentCard agent={agent} />
+                  <AgentCard
+                    agent={agent}
+                    isOwned={ownedAgents.some(owned => owned.agent._id === agent._id)}
+                    onPurchaseSuccess={refetchOwnedAgents}
+                  />
                 </motion.div>
               ))
             ) : (
