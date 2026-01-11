@@ -3,7 +3,7 @@
 <div align="center">
 
 **Decentralized MCP Agent Marketplace on Amadeus Blockchain**  
-*Discover, deploy, and monetize AI agents powered by the Model Context Protocol*
+*Discover, purchase, and monetize AI agents powered by the Model Context Protocol*
 
 [![Next.js](https://img.shields.io/badge/Next.js-16.1.1-black?style=flat-square&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-19.2.3-61DAFB?style=flat-square&logo=react)](https://reactjs.org/)
@@ -16,36 +16,350 @@
 
 ## 📖 Overview
 
-**Amadeus Agent Marketplace** is a decentralized platform for discovering, publishing, and monetizing MCP (Model Context Protocol) servers on the Amadeus blockchain. It allows AI agent developers to list their self-hosted MCP servers and enables users to discover and purchase access using AMA tokens.
+**Amadeus Agent Marketplace** is a decentralized platform for discovering, publishing, and purchasing MCP (Model Context Protocol) Agents on the **Amadeus Blockchain**. Developers can list their self-hosted MCP servers, while users can discover and purchase agent access using AMA tokens with complete on-chain transactions.
 
-### Key Concept
-
-Developers maintain full control over their infrastructure by deploying on our platform or self-hosting MCP agents anywhere, while the marketplace handles discovery, payments, and access management through the Amadeus blockchain.
+This project demonstrates a production-ready marketplace built on Amadeus, featuring real token transfers, ownership tracking, and a complete purchase flow from wallet signing to blockchain confirmation.
 
 ---
 
-## ✨ Features
+## 🎯 Concept Deck
 
-### 🔍 For Users
+### Problem Statement
+
+**The AI Agent Economy is Fragmented**
+
+As AI agents become more sophisticated, developers lack a unified marketplace to:
+- **Monetize** their MCP-compatible agents
+- **Reach users** who need specialized AI capabilities
+- **Prove ownership** and prevent unauthorized usage
+- **Receive payments** in a decentralized, trustless manner
+
+Current solutions either:
+1. Rely on centralized platforms with high fees
+2. Require manual payment coordination
+3. Lack proper ownership verification
+4. Don't support the emerging MCP standard
+
+### Our Solution
+
+**A Decentralized Marketplace on Amadeus Blockchain**
+
+Amadeus Agent Marketplace provides:
+- ✅ **Blockchain-based ownership** - Every purchase recorded on-chain
+- ✅ **AMA token payments** - Direct peer-to-peer transactions
+- ✅ **MCP standard support** - Works with any MCP-compatible agent
+- ✅ **Self-hosted flexibility** - Developers control their infrastructure
+- ✅ **Discovery platform** - A discovery platform for decentralized AI Agents
+
+### Use Cases
+
+**For AI Agent Developers:**
+1. **Trading Bot Creator** - List a DeFi trading agent, charge 50 AMA/month or more
+2. **Data Analysis Provider** - Offer specialized market analysis MCP server
+3. **Research Assistant Developer** - Monetize academic research agent
+4. **Custom Tool Builder** - Sell niche automation agents
+
+**For Users:**
+1. **Crypto Trader** - Purchase whale tracking agent for portfolio management
+2. **Developer** - Buy code analysis agent for project auditing
+3. **Researcher** - Access specialized data aggregation agents
+4. **Business Analyst** - Use market intelligence agents
+
+### Key Metrics
+
+- **100% On-Chain** - All purchases are verified on **Amadeus blockchain**
+- **Zero Platform Lock-in** - Agents self-hosted by developers
+- **Sub-second Transactions** - Fast purchase confirmations
+- **Atomic Ownership** - Duplicate purchase prevention via database constraints
+
+---
+
+## Architecture
+
+### System Components
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                        USER INTERFACE                           │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐       │
+│  │  Explore │  │  Publish │  │ My Agents│  │   Docs   │       │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘       │
+└────────────────────────┬────────────────────────────────────────┘
+                         │
+                         ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                    FRONTEND LAYER (Next.js)                     │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐         │
+│  │ WalletContext│  │  usePurchase │  │  useBalance  │         │
+│  └──────────────┘  └──────────────┘  └──────────────┘         │
+└──────┬────────────────────┬────────────────────┬────────────────┘
+       │                    │                    │
+       ↓                    ↓                    ↓
+┌─────────────┐    ┌──────────────────┐    ┌────────────────┐
+│   Amadeus   │    │   API Routes     │    │   MongoDB      │
+│   Wallet    │    │  (Serverless)    │    │   Database     │
+│  Extension  │    └────────┬─────────┘    └────────┬───────┘
+└──────┬──────┘             │                       │
+       │                    │                       │
+       │  ┌─────────────────┼───────────────────────┤
+       │  │                 │                       │
+       ↓  ↓                 ↓                       ↓
+┌─────────────────────────────────────────────────────────────────┐
+│                    BLOCKCHAIN LAYER                             │
+│                                                                 │
+│  ┌─────────────────┐         ┌─────────────────┐              │
+│  │ Amadeus Network │ ←─────→ │  Amadeus SDK    │              │
+│  │  (Testnet/Main) │         │ TransactionBuilder              │
+│  └─────────────────┘         └─────────────────┘              │
+│                                                                 │
+│  • Coin.transfer contract                                      │
+│  • BLS12-381 signatures                                        │
+│  • Transaction submission                                      │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Purchase Flow
+
+```
+User clicks "Get for X AMA"
+    ↓
+Backend builds transaction → { contract: 'Coin', method: 'transfer', args }
+    ↓
+Wallet signs transaction → { txHash, txPacked }
+    ↓
+Submit to Amadeus blockchain
+    ↓
+Record ownership in database
+    ↓
+Display success notification
+```
+
+## Features
+
+### For Users
 - **Agent Discovery** - Browse marketplace with real-time search and category filtering
-- **Wallet Integration** - Connect Amadeus wallet with automatic balance updates
-- **Secure Payments** - Purchase agent access using AMA tokens
-- **MCP Configuration** - Receive server details for Claude (or any other LLM) Desktop integration
-- **Rating System** - View community ratings before purchasing
+- **Wallet Integration** - Connect **Amadeus wallet** with automatic balance tracking
+- **Secure Purchases** - Complete on-chain payment flow:
+  1. Build transaction with proper binary encoding
+  2. Sign transaction with wallet extension
+  3. Submit signed transaction to blockchain
+  4. Record ownership in database after confirmation
+- **Ownership Management** - View all purchased agents in "My Agents" collection
+- **Purchase Notifications** - Success/error modals with transaction hashes
+- **Explorer Links** - Direct links to view transactions on Amadeus Explorer
+- **Owned Agent Display** - Agents you own show "Already Owned" status
 
-### 📤 For Developers
-- **Easy Publishing** - 3-step agent registration workflow (Agent Info → MCP & Pricing → Additional Info)
-- **Flexible Pricing** - Set free or paid access models with custom pricing
-- **Self-Hosted** - Full control over infrastructure and deployment
-- **File Uploads** - Upload logos and demo videos via Vercel Blob storage
-- **Verification** - Agents reviewed by Amadeus DAO before listing
+### For Developers
+- **Easy Publishing** - 3-step agent registration workflow:
+  1. Agent Info (name, category, description, logo)
+  2. MCP & Pricing (server URL, protocol, pricing model)
+  3. Additional Info (demo video, GitHub, website)
+- **Flexible Pricing** - Set free or paid access with custom AMA token pricing
+- **Self-Hosted Infrastructure** - Full control over agent deployment
+- **File Uploads** - Media storage uploads (logos, videos, screenshots)
+- **Success Confirmation** - Styled modal with agent registration confirmation
+- **DAO Review** - Optional review process before marketplace listing
 
-### 🎨 Platform Features
-- **Real-time Updates** - Live balance fetching and agent status
-- **Responsive Design** - Mobile-first cyberpunk terminal aesthetic
-- **Auto-Registration** - Users automatically registered on first wallet connection
+### Platform Features
+- **Real-time Balance Updates** - Live AMA token balance in wallet dropdown
+- **Responsive Cyberpunk UI** - Terminal-inspired design with smooth animations
+- **Auto-Registration** - Users created automatically on first wallet connection  
+- **Skeleton Loaders** - Professional loading states during data fetching
+- **Mobile-First Design** - Fully responsive across all devices
+- **Transaction History** - View purchase details with transaction hashes
+- **Ownership Filtering** - Agents marked as owned across all marketplace views
 
 ---
+
+## How Amadeus Is Used
+
+### Integration Points
+
+#### 1. **AMA Token Payments**
+**Contract**: `Coin.transfer`
+
+```typescript
+const transaction = {
+  contract: 'Coin',
+  method: 'transfer',
+  args: [recipient, amount, 'AMA'],
+  description: `Transfer ${displayAmount} AMA for agent purchase`
+};
+```
+
+- **Purpose**: Peer-to-peer payments for agent purchases
+- **Implementation**: Direct token transfers from buyer to agent creator
+- **Verification**: Transaction hash stored with ownership record
+
+#### 2. **Wallet Integration & Identity** 
+**Technology**: BLS12-381 signatures via Amadeus Wallet Extension
+
+- **Agent Identity**: Each creator identified by wallet address
+- **User Identity**: Buyers authenticated via wallet connection
+- **Signature Verification**: All transactions signed with BLS12-381
+- **automatic Registration**: Users auto-created on first connection
+
+```typescript
+const signResult = await wallet.provider.signTransaction(transaction);
+// Returns: { txHash, txPacked, signature }
+```
+
+#### 3. **Transaction Building & Submission** ✅ Implemented
+**SDK**: `@amadeus-protocol/sdk`
+Uses the Amadeus SDK to build and submit transactions on the blockchain.
+
+```typescript
+// Building transactions
+const builder = new TransactionBuilder();
+const transaction = builder.buildTransfer({
+  recipient, amount, symbol: 'AMA'
+});
+
+// Submitting to network
+const sdk = new AmadeusSDK({ baseUrl: nodeUrl });
+const result = await sdk.transaction.submit(txPacked);
+```
+
+#### 4. **Balance Tracking** 
+**SDK Method**: `sdk.wallet.getBalance()`
+
+```typescript
+const result = await sdk.wallet.getBalance(walletAddress, 'AMA');
+const balance = result.balance.float; // Human-readable format
+```
+
+- Real-time balance display in wallet dropdown
+- Pre-purchase balance validation
+- Support for atomic units (1 AMA = 1e9)
+
+### Future  Features on Amadeus Blockchain
+
+#### **uPoW (Useful Proof of Work)**
+- Agent creators could stake uPoW for verification
+- Reputation system based on uPoW contribution
+- Priority listing for high-uPoW agents
+
+#### **WASM Runtime**
+- Host lightweight agent logic on-chain
+- Verifiable computation for agent operations
+- Smart contract-based access control
+
+#### **State Proofs**
+- Cryptographic proof of ownership  
+- Verify agent access without database queries
+- Cross-chain ownership verification
+
+#### **Oracle Streams**
+- Real-time agent usage metrics
+- Performance monitoring on-chain
+- Automated revenue distribution
+
+#### **Swarm Coordination**
+- Multi-agent collaboration marketplace
+- Coordinated task execution
+- Agent-to-agent payments
+
+---
+
+## Current Revenue Model
+
+**Marketplace Commission (Future)**
+- 2.5% platform fee on paid agent sales
+- Fee deducted automatically from transfers
+- Funds platform development and hosting
+
+### Example Economics
+
+**Agent Creator**:
+- Lists agent at 100 AMA
+- Receives 97.5 AMA per sale (after 2.5% fee)
+- 100 sales = 9,750 AMA revenue
+
+**Platform**:
+- 2.5 AMA per 100 AMA purchase
+- 100,000 total sales = 250,000 AMA platform revenue
+- Funds development, infrastructure, DAO operations
+
+### Additional Revenue Streams
+
+1. **Premium Listings** (10 AMA/month)
+   - Featured placement on homepage
+   - Verified badge
+   - Analytics dashboard
+
+2. **Platform-Hosted Agents** (20% revenue share)
+   - Managed infrastructure
+   - Auto-scaling
+   - Monitoring included
+
+3. **Developer Subscription** (50 AMA/month)
+   - Unlimited agent listings
+   - Advanced analytics
+   - Priority support
+
+4. **Enterprise Solutions**
+   - Private marketplaces
+   - Custom integrations
+   - White-label options
+
+### Sustainability Model
+
+- **Bootstrap Phase**: Free marketplace, no fees
+- **Growth Phase**: Introduce small platform fee (1-2.5%)
+- **Mature Phase**: DAO governance determines fee structure
+- **Long-term**: Transition to community-owned protocol
+
+---
+
+## Key Architectural Decisions
+
+#### ✅ **Hybrid Storage (Off-chain + On-chain)**
+
+**Decision**: Store agent metadata in MongoDB, record ownership on blockchain for 
+- Fast agent discovery and search
+- Rich filtering and sorting capabilities
+- Lower costs than full on-chain storage
+- Transaction hashes provide blockchain proof
+
+---
+
+#### ✅ **Self-Hosted Agents**
+
+**Decision**: Developers host their own MCP servers
+- No platform infrastructure costs
+- Developers control scaling
+- Flexible deployment options
+- Lower barrier to entry
+
+
+---
+
+#### ✅ **Direct P2P Payments**
+
+**Decision**: Payments go directly from buyer to creator
+
+- No escrow complexity
+- Immediate creator payouts
+- Trustless transactions
+- Lower fees
+---
+
+### Technical Challenges Overcome
+
+1. **✅ Binary Encoding** - Amadeus transactions require binary-encoded arguments
+   - **Solution**: Use SDK's TransactionBuilder with proper string conversion
+   
+2. **✅ Wallet Integration** - Browser extension communication
+   - **Solution**: Amadeus provider detection with event listeners
+   
+3. **✅ Atomic Units** - AMA uses 9 decimal places
+   - **Solution**: Consistent conversion (1 AMA = 1e9 atomic units)
+   
+4. **✅ Transaction Submission** - Multi-step process
+   - **Solution**: Separate build, sign, and submit API endpoints
+---
+
+
 
 ## 🛠 Technology Stack
 
@@ -53,18 +367,25 @@ Developers maintain full control over their infrastructure by deploying on our p
 - **Next.js 16.1.1** - React framework with App Router
 - **React 19.2.3** - Latest React with concurrent features
 - **TypeScript 5** - Type-safe development
-- **Tailwind CSS 4** - Utility-first styling
-- **Framer Motion 12** - Advanced animations and transitions
-- **Lucide React** - Beautiful icon library
+- **Tailwind CSS 4** - Utility-first styling with custom cyberpunk theme
+- **Framer Motion 12** - Advanced animations and page transitions
+- **Lucide React** - Comprehensive icon library
 
 ### Backend & Blockchain
-- **Amadeus SDK** (`@amadeus-protocol/sdk ^1.0.2`) - Amadeus Blockchain integration
-- **MongoDB + Mongoose** - Database for agent metadata and users
-- **Vercel Blob** - File storage for media uploads
+- **Amadeus SDK** (`@amadeus-protocol/sdk ^1.0.2`) 
+  - Complete blockchain integration
+  - Transaction building with `TransactionBuilder`
+  - Wallet balance fetching
+  - Transaction submission to nodes
+- **MongoDB + Mongoose** - Database for agents, users, and ownership
+- **Vercel Blob** - Scalable file storage for media uploads
+- **Next.js API Routes** - Serverless API endpoints
 
-### Wallet Integration
+### Wallet & Payments
 - **Amadeus Wallet Extension** - BLS12-381 signature support
-- **Balance Tracking** - Real-time AMA balance updates
+- **On-Chain Transactions** - Real AMA token transfers via `Coin.transfer`
+- **Balance Tracking** - Real-time balance updates in atomic units
+- **Transaction Verification** - Ownership recorded with transaction hashes
 
 ---
 
@@ -72,10 +393,10 @@ Developers maintain full control over their infrastructure by deploying on our p
 
 ### Prerequisites
 
-- Node.js 20+
-- MongoDB (local or cloud instance like MongoDB Atlas)
-- Amadeus Wallet Extension
-- Vercel Blob account (for file uploads)
+- **Node.js 20+**
+- **MongoDB** (local or cloud instance like MongoDB Atlas)
+- **Amadeus Wallet Extension** - [Install from Chrome Web Store](https://chromewebstore.google.com/detail/amadeus-wallet/gigmkdnbhopbandngplohmilogilbkjn)
+- **Vercel Blob Account** - For file uploads (optional for testing)
 
 ### Installation
 
@@ -99,7 +420,7 @@ Developers maintain full control over their infrastructure by deploying on our p
    
    # Amadeus Network
    NEXT_PUBLIC_DEFAULT_NODE_URL=https://nodes.amadeus.bot/api
-   NEXT_PUBLIC_TESTNET_NODE_URL="http://testnet.ama.one/api"
+   NEXT_PUBLIC_TESTNET_NODE_URL=http://testnet.ama.one/api
 
    # Vercel Blob Storage (for file uploads)
    BLOB_READ_WRITE_TOKEN=your_blob_token
@@ -125,176 +446,89 @@ amadeus-agent-marketplace/
 │   │   ├── agent/          # Agent CRUD operations
 │   │   │   ├── route.ts    # List/Create agents
 │   │   │   └── upload/     # File upload endpoint
+│   │   ├── build-transaction/  # Build unsigned transaction for wallet signing
+│   │   ├── submit-transaction/ # Submit signed transaction to blockchain
+│   │   ├── purchase/       # Record agent purchase with ownership
+│   │   ├── my-agents/      # Fetch user's owned agents
 │   │   └── user/           # User registration & retrieval
 │   ├── explore/            # Agent marketplace page
-│   │   └── page.tsx        # Wrapper for Explore component
 │   ├── publish/            # Agent publishing page
-│   │   └── page.tsx        # Wrapper for Publish component  
-│   ├── docs/               # Documentation page
+│   ├── my-agents/          # User's purchased agents collection
+│   ├── docs/               # Documentation
 │   ├── layout.tsx          # Root layout with Navbar
 │   ├── page.tsx            # Homepage
 │   └── globals.css         # Global styles
-│
+
 ├── components/              # React components
-│   ├── AgentCard.tsx       # Agent display card with pricing
-│   ├── ConnectWallet.tsx   # Wallet connection button with balance
-│   ├── Explore.tsx         # Main explore page component
+│   ├── AgentCard.tsx       # Agent card with purchase integration
+│   ├── PurchaseModal.tsx   # Agent purchase flow modal
+│   ├── PurchaseNotification.tsx  # Success/error notifications
+│   ├── OwnedAgentCard.tsx  # Card for owned agents
+│   ├── MyAgentsPage.tsx    # Purchased agents collection view
+│   ├── ConnectWallet.tsx   # Wallet connection with balance dropdown
+│   ├── Explore.tsx         # Marketplace with search & filters
 │   ├── Navbar.tsx          # Navigation with wallet integration
 │   ├── Publish.tsx         # Multi-step publish form
 │   └── ui/                 # Reusable UI components
-│
+
 ├── contexts/               # React contexts
 │   └── WalletContext.tsx   # Global Amadeus wallet state
-│
+
 ├── hooks/                  # Custom React hooks
-│   ├── useAmadeus.ts      # Wallet provider detection
+│   ├── useAmadeus.ts      # Wallet provider detection & connection
 │   ├── useBalance.ts      # AMA balance fetching
-│   ├── useWallet.ts       # Wallet state consumer
+│   ├── useWallet.ts       # Wallet state consumer hook
+│   ├── usePurchase.ts     # Complete purchase flow orchestration
+│   ├── useMyAgents.ts     # Fetch user's owned agents
 │   └── useUserRegistration.ts  # Auto user registration
-│
+
 ├── lib/                    # Utilities and configurations
 │   ├── models/            # MongoDB schemas
 │   │   ├── Agent.ts       # Agent model with MCP config
-│   │   └── User.ts        # User model
+│   │   ├── User.ts        # User model
+│   │   └── UserOwnedAgent.ts  # Agent ownership records
 │   ├── connectDb.ts       # Database connection utility
 │   └── validation.ts      # Form validation logic
-│
+
 ├── types/                  # TypeScript definitions
 │   └── amadeus.d.ts       # Amadeus wallet provider types
-│
-└── docs/                   # Documentation files
-    └──
+
 ```
 
 ---
 
-## 🌐 Available Pages
+## 🧪 Testing the Purchase Flow
 
-| Route | Description |
-|-------|-------------|
-| `/` | Homepage with featured agents and call-to-action |
-| `/explore` | Browse marketplace with search, filters, and skeleton loaders |
-| `/publish` | 3-step agent registration form with file uploads |
-| `/docs` | Developer documentation and guides |
-
----
-
-## 🔌 API Endpoints
-
-### User API
-```
-GET  /api/user?publicKey={address}  - Get user by wallet address
-GET  /api/user                      - Get all users
-POST /api/user                      - Register new user
-     Body: { publicKey, username?, email? }
-```
-
-### Agent API
-```
-GET  /api/agent                     - List all active agents
-GET  /api/agent?id={agentId}        - Get specific agent details
-POST /api/agent                     - Register new agent (requires wallet)
-     Body: {
-       name, description, category, mcpConfig,
-       pricing, owner, logoUrl?, demoVideoUrl?,
-       githubUrl?, websiteUrl?
-     }
-```
-
-### Upload API
-```
-POST /api/agent/upload              - Upload agent media files
-     FormData: { file, type: 'logo' | 'video' | 'screenshot' }
-     Returns: { url: string }
-```
+1. **Connect Wallet** - Install Amadeus Wallet Extension and connect
+2. **Fund Wallet** - Get testnet AMA tokens
+3. **Browse Agents** - Navigate to `/explore`
+4. **Purchase Agent** - Click "Get for X AMA" on a paid agent
+5. **Approve Transaction** - Confirm in wallet popup
+6. **View Collection** - Go to `/my-agents` to see your purchased agent
+7. **Check Explorer** - Click transaction hash to view on blockchain
 
 ---
 
-## 💰 Agent Publishing Workflow
+## 🔒 Security Features
 
-### Step 1: Agent Info
-- Agent name and category
-- Description (4-line textarea)
-- Logo upload (optional, PNG/JPG/SVG, max 2MB)
-
-### Step 2: MCP & Pricing
-- MCP Server URL
-- Protocol selection (SSE or STDIO)
-- Pricing model (Free or Paid)
-- Price in AMA tokens (for paid agents)
-
-### Step 3: Additional Info
-- Demo video upload (optional, MP4/WebM, max 50MB)
-- GitHub repository URL (optional)
-- Website URL (optional)
-
-**Validation:** Each step validates fields before allowing progression. Price validation ensures paid agents have valid amounts.
-
----
-
-## 🗄️ Database Models
-
-### User Model
-```typescript
-{
-  publicKey: string;      // Amadeus wallet address (unique)
-  username?: string;
-  email?: string;
-  createdAt: Date;
-}
-```
-
-### Agent Model
-```typescript
-{
-  name: string;                    // 3-100 characters
-  description: string;             // 10-1000 characters
-  category: string;                // trading, analysis, defi, etc.
-  tags: string[];                  // Max 10 tags
-  
-  mcpConfig: {
-    serverUrl: string;             // MCP server endpoint
-    protocol: 'stdio' | 'sse';
-    transport?: 'http' | 'websocket';
-  };
-  
-  pricing: {
-    model: 'free' | 'paid';
-    amount: number;                // In atomic units (1 AMA = 1e9)
-    currency: 'AMA';
-  };
-  
-  owner: string;                   // Wallet address
-  logoUrl?: string;
-  demoVideoUrl?: string;
-  screenshotUrls?: string[];
-  githubUrl?: string;
-  websiteUrl?: string;
-  
-  isVerified: boolean;             // DAO verification status
-  isActive: boolean;               // Listing status
-  
-  stats: {
-    totalPurchases: number;
-    activeSubscribers: number;
-    averageRating: number;
-    totalReviews: number;
-  };
-}
-```
+- **Duplicate Purchase Prevention** - Database constraint on userId + agentId
+- **Balance Validation** - Frontend checks before allowing purchase
+- **Transaction Verification** - Only records purchases with valid transaction hashes
+- **Wallet-Only Actions** - Purchase and publish require connected wallet
+- **Atomic Units** - All amounts handled in atomic units (1 AMA = 1e9)
+- **MongoDB Indexes** - Optimized queries for userId and agentId lookups
 
 ---
 
 ## 🚀 Future Enhancements
 
-- [ ] **On-chain Registry** - Store agent metadata on Amadeus blockchain
-- [ ] **Payment Processing** - Implement AMA token payments via smart contracts  
-- [ ] **Agent Analytics** - Dashboard for developers to track usage and revenue
-- [ ] **Rating System** - Allow users to rate and review agents
+
 - [ ] **Subscription Management** - Recurring payments for ongoing access
-- [ ] **Agent Categories** - Expand beyond current 8 categories
-- [ ] **Platform Hosting** - Deploy and host agents directly on the platform
-- [ ] **Advanced Search** - Semantic search, price filtering, sorting options
+- [ ] **Rating System** - Fully functional user reviews and ratings
+- [ ] **Agent Analytics** - Dashboard for developers to track revenue
+- [ ] **Advanced Search** - Semantic search, price filtering, sorting
+- [ ] **Platform Hosting** - Deploy and host agents on platform infrastructure
+- [ ] **Marketplace Fees** - Optional commission system for platform sustainability
 
 ---
 
@@ -318,10 +552,16 @@ This project is licensed under the MIT License.
 
 ## 🔗 Links
 
+### Project & Platform
 - [GitHub Repository](https://github.com/Elite-tch/amadeus-agent-marketplace)
 - [Amadeus Network](https://ama.one)
 - [Amadeus Explorer](https://explorer.ama.one)
+- [Amadeus Wallet Extension](https://chromewebstore.google.com/detail/amadeus-wallet/gigmkdnbhopbandngplohmilogilbkjn)
+
+### Developer Resources
 - [MCP Documentation](https://modelcontextprotocol.io)
+- [Amadeus SDK](https://github.com/amadeusprotocol/amadeus-typescript-sdk)
+- [Amadeus SDK - Transaction Building](https://docs.ama.one/sdk/4.-transaction-building)
+- [Amadeus Wallet Extension React Demo](https://github.com/amadeusprotocol/amadeus-wallet-extension-react-demo)
 
 ---
-
