@@ -5,9 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Upload, FileCode, ArrowLeft, Check, X, CloudUpload, Server, Image, Video, CheckCircle } from 'lucide-react';
 import { useWallet } from '@/hooks/useWallet';
 import { validateAgentForm, ValidationErrors } from '@/lib/validation';
+import { toAtomicAma } from '@amadeus-protocol/sdk';
 
 export default function PublishPage() {
-  const { account, isConnected } = useWallet();
+  const { account, isConnected, provider } = useWallet();
   const [selectedOption, setSelectedOption] = useState<'platform' | 'self-hosted' | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,6 +81,12 @@ export default function PublishPage() {
     }
   };
 
+  const [isPaying, setIsPaying] = useState(false);
+
+  // CONSTANTS
+  const PUBLISH_FEE = 1;
+  const TREASURY_ADDRESS = "6cgywWe4bPYyMtBdRnfbYeuim9bDExDHpyrWL1oXbz3JFUrgNLy88vayDkC3Mto7tu";
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -88,8 +95,55 @@ export default function PublishPage() {
       return;
     }
 
+    if (!provider) {
+      alert('Amadeus provider not available');
+      return;
+    }
+
     try {
       setIsSubmitting(true);
+
+      // --- Payment Step ---
+      setIsPaying(true);
+      console.log('Initiating publication fee payment...');
+
+      // 1. Build Transaction
+      const buildResponse = await fetch('/api/build-transaction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          recipient: TREASURY_ADDRESS,
+          amount: toAtomicAma(PUBLISH_FEE),
+        }),
+      });
+
+      const buildData = await buildResponse.json();
+      if (!buildResponse.ok) throw new Error(buildData.error || 'Failed to build payment transaction');
+
+      const transaction = buildData.transaction;
+
+      // Update description for clarity in wallet
+      transaction.description = `Pay ${PUBLISH_FEE} AMA fee to publish agent "${formData.name}"`;
+
+      // 2. Sign Transaction
+      console.log('Requesting signature...');
+      const signResult = await provider.signTransaction(transaction);
+      console.log('Transaction signed:', signResult.txHash);
+
+      // 3. Submit Transaction
+      console.log('Submitting transaction...');
+      const submitResponse = await fetch('/api/submit-transaction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ txPacked: signResult.txPacked }),
+      });
+
+      const submitData = await submitResponse.json();
+      if (!submitResponse.ok) throw new Error(submitData.error || 'Payment transaction failed');
+
+      console.log('Payment successful:', submitData.txHash);
+      setIsPaying(false);
+      // --- End Payment Step ---
 
       const payload = {
         name: formData.name,
@@ -111,6 +165,7 @@ export default function PublishPage() {
         screenshotUrls: uploadedFiles.screenshotUrls,
         githubUrl: formData.githubUrl,
         websiteUrl: formData.websiteUrl,
+        paymentTxHash: submitData.txHash, // Optional: verify payment on backend if needed
       };
 
       const response = await fetch('/api/agent', {
@@ -153,6 +208,7 @@ export default function PublishPage() {
     } catch (error) {
       console.error('Submission error:', error);
       alert(error instanceof Error ? error.message : 'Failed to submit agent');
+      setIsPaying(false);
     } finally {
       setIsSubmitting(false);
     }
@@ -639,7 +695,7 @@ export default function PublishPage() {
                     className="flex-1 btn-primary"
                     disabled={isSubmitting || !isConnected}
                   >
-                    {isSubmitting ? 'Submitting...' : 'Submit Agent'}
+                    {isSubmitting ? (isPaying ? 'Processing Payment...' : 'Submitting...') : 'Pay 1 AMA & Submit'}
                   </button>
                 </div>
               </motion.div>

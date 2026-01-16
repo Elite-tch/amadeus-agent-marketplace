@@ -106,7 +106,7 @@ export default function OwnedAgentCard({
         {/* Hover Action */}
         <div className="absolute inset-x-0 bottom-0 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 z-30">
           <a
-            href={agent.documentationUrl || agent.githubUrl || "#"}
+            href={agent.documentationUrl || agent.githubUrl || agent.mcpConfig.serverUrl || "#"}
             target="_blank"
             rel="noopener noreferrer"
             className="block w-full bg-[#00ff9d] text-black py-3 text-xs font-mono font-bold uppercase tracking-widest text-center hover:bg-[#00cc7d] transition-colors"
