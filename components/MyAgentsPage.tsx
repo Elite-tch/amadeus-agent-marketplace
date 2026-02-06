@@ -70,7 +70,7 @@ export default function MyAgentsPage() {
               My <span className="text-stroke-green">Agents</span>
             </h1>
             <p className="text-slate-500 max-w-lg">
-              Access and manage your purchased autonomous agents
+              Access and manage your purchased AI agents
             </p>
           </div>
 
@@ -79,7 +79,7 @@ export default function MyAgentsPage() {
               href="/explore"
               className="px-4 py-2 bg-transparent border border-[#333] text-slate-400 hover:border-[#00ff9d] hover:text-[#00ff9d] text-xs font-bold uppercase tracking-widest transition-colors"
             >
-              Explore More
+              Explore All Agents
             </Link>
           </div>
         </div>

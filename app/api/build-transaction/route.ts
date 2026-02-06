@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
         amount.toString(),      // Amount in atomic units as string
         'AMA'                   // Symbol as string
       ],
-      description: `Transfer ${(amount / 1_000_000_000).toFixed(2)} AMA for agent purchase`,
+      description: `Pay ${(amount / 1_000_000_000).toFixed(2)} AMA to access agent`,
     };
 
     console.log('Built transaction for wallet signing:', transaction);
